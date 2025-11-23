@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  appointments Appointment[]
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  DOCTOR
+  APPOTHECARY
+  CASHIER
+  USER
+}
+
+model Patient {
+  id            Int      @id @default(autoincrement())
+  idCard        String   @unique
+  name          String
+  dateOfBirth   DateTime
+  gender        String
+  address       String?
+  phone         String?  @unique
+  email         String?  @unique
+  bloodType     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  appointments  Appointment[]
+}
+
+model Appointment {
+  id          Int      @id @default(autoincrement())
+  patientId   Int
+  doctorId    Int
+  appointmentDate DateTime
+  reason      String?
+  status      AppointmentStatus @default(SCHEDULED)
+  diagnosis   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  doctor      User     @relation(fields: [doctorId], references: [id])
+  prescription  Prescription[]
+
+  @@index([doctorId])
+  @@index([patientId])
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+model Medicines {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  stock       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  prescription  Prescription[]
+}
+
+model Prescription {
+  id            Int         @id @default(autoincrement())
+  appointmentId Int
+  medicineId    Int
+  quantity      Int
+  note          String?
+  status        PrescriptionStatus @default(PENDING)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  medicine      Medicines   @relation(fields: [medicineId], references: [id])
+
+  @@index([appointmentId])
+  @@index([medicineId])
+}
+
+enum PrescriptionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}

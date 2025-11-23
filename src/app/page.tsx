@@ -1,103 +1,176 @@
-import Image from "next/image";
+"use client"
+
+import { useSidebar } from "@/stores/stores";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LucideCalendar, LucideUsers, LucidePill, LucideDollarSign, LucideLoader2 } from "lucide-react";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "@/lib/axios";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { isSidebarOpen } = useSidebar((state) => state);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  const { data: statistics, isLoading: loadingStatistics } = useQuery({
+    queryKey: ['dashboard-statistics'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/statistics');
+      return response.data.data;
+    }
+  });
+
+  return (
+    <div className={`flex-1 pt-16 md:pt-6 pb-8 transition-all duration-300 dark:bg-[#111b35] p-6 ${isSidebarOpen ? "ml-50 sm:ml-64" : "ml-16"}`}>
+      <Breadcrumb className="mt-8 sm:mt-20 mb-5">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/" className="font-semibold dark:text-slate-400">Home</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage className="font-semibold dark:text-slate-100">Dashboard</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <h1 className="text-2xl md:text-3xl font-bold dark:text-slate-100">Overview</h1>
+      <div className="grid gap-4 pt-4 md:pt-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <Card className="border-gray-100 shadow-xs dark:bg-slate-900 dark:border-slate-700">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-sm font-medium text-gray-500 dark:text-slate-300">Total Patients</CardTitle>
+            <LucideUsers className="h-4 w-4 text-muted-foreground dark:text-slate-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="text-2xl font-bold">{loadingStatistics ? (
+                <LucideLoader2 className="h-6 w-6 animate-spin text-gray-400" />
+              ) : statistics?.totalPatients}</div>
+              <p className="text-xs text-muted-foreground dark:text-slate-400">Total registered patients</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-gray-100 shadow-xs dark:bg-slate-900 dark:border-slate-700">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-sm font-medium text-gray-500 dark:text-slate-300">Appointments</CardTitle>
+            <LucideCalendar className="h-4 w-4 text-muted-foreground dark:text-slate-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="text-2xl font-bold">{loadingStatistics ? (
+                <LucideLoader2 className="h-6 w-6 animate-spin text-gray-400" />
+              ) : statistics?.totalAppointments}</div>
+              <p className="text-xs text-muted-foreground dark:text-slate-400">Total appointments</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-gray-100 shadow-xs dark:bg-slate-900 dark:border-slate-700">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-sm font-medium text-gray-500 dark:text-slate-300">Medicines Sold</CardTitle>
+            <LucidePill className="h-4 w-4 text-muted-foreground dark:text-slate-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="text-2xl font-bold">{loadingStatistics ? (
+                <LucideLoader2 className="h-6 w-6 animate-spin text-gray-400" />
+              ) : statistics?.totalMedicinesSold}</div>
+              <p className="text-xs text-muted-foreground dark:text-slate-400">Total medicines sold</p>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="border-gray-100 shadow-xs dark:bg-slate-900 dark:border-slate-700">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-sm font-medium text-gray-500 dark:text-slate-300">Revenue</CardTitle>
+            <LucideDollarSign className="h-4 w-4 text-muted-foreground dark:text-slate-400" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="text-2xl font-bold">{loadingStatistics ? (
+                <LucideLoader2 className="h-6 w-6 animate-spin text-gray-400" />
+              ) : `Rp. ${statistics?.totalRevenue.toLocaleString()}`}</div>
+              <p className="text-xs text-muted-foreground dark:text-slate-400">Total revenue</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="mt-4 md:mt-6 border-gray-100 shadow-xs dark:bg-slate-900 dark:border-slate-700">
+        <CardHeader>
+          <CardTitle className="text-base md:text-lg">Monthly Revenue Overview</CardTitle>
+        </CardHeader>
+        <CardContent className="px-2 md:px-6">
+          {loadingStatistics ? (
+            <div className="flex items-center justify-center h-[200px] md:h-[300px]">
+              <LucideLoader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height={250} className="mt-4">
+              <BarChart data={statistics?.monthlyRevenue}>
+                <XAxis dataKey="name" stroke="#888888" fontSize={12} tick={{ fontSize: 10 }} tickFormatter={(value) => value.substring(0, 3)} />
+                <YAxis
+                  stroke="#888888"
+                  fontSize={12}
+                  tick={{ fontSize: 10 }}
+                  tickFormatter={(value) => {
+                    if (value >= 1000000) {
+                      return `${(value / 1000000).toFixed(0)}M`;
+                    } else if (value >= 1000) {
+                      return `${(value / 1000).toFixed(0)}K`;
+                    }
+                    return value;
+                  }}
+                />
+                <Bar dataKey="total" fill="#2563eb" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="mt-4 md:mt-6 border-gray-100 shadow-xs dark:bg-slate-900 dark:border-slate-700">
+        <CardHeader className="px-4 md:px-6">
+          <CardTitle className="text-base md:text-lg">Recent Activities</CardTitle>
+        </CardHeader>
+        <CardContent className="px-2 md:px-6 overflow-auto -mt-4">
+          {loadingStatistics ? (
+            <div className="flex items-center justify-center h-[200px]">
+              <LucideLoader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : (
+            <div className="w-full overflow-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="whitespace-nowrap">Patient</TableHead>
+                    <TableHead className="whitespace-nowrap">Doctor</TableHead>
+                    <TableHead className="whitespace-nowrap">Status</TableHead>
+                    <TableHead className="whitespace-nowrap">Revenue</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {statistics?.recentAppointments?.map((apt: any) => (
+                    <TableRow key={apt.id} className="text-xs md:text-sm dark:text-slate-300 dark:hover:bg-slate-800">
+                      <TableCell className="whitespace-nowrap">{apt.patient}</TableCell>
+                      <TableCell className="whitespace-nowrap">{apt.doctor}</TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        <Badge className={
+                          apt.status === "COMPLETED" ? "bg-green-400 text-[0.6rem] sm:text-xs dark:text-slate-100" : apt.status === "SCHEDULED" ? "bg-blue-400 text-[0.6rem] sm:text-xs dark:text-slate-100" : "bg-red-400 text-[0.6rem] sm:text-xs dark:text-slate-100"
+                        }>
+                          {apt.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">{apt.revenue === 0 ? "-" : `Rp. ${apt.revenue?.toLocaleString()}`}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

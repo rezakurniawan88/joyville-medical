@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Joyville - Medical Center ERP
+
+![Joyville Preview](public/preview/preview-image.png)
+
+Joyville Medical Center ERP is a small to medium-scale clinic/hospital management system built with modern technology to simplify internal workflows such as patient registration, appointment management, medical records, drug inventory, payments, and operational reports.
+
+## Features
+
+### **Authentication & Authorization**
+* Login & Register (admin, doctor, appothecary, cashier, user)
+* Role-based Access Control (RBAC)
+
+### **Dashboard**
+* Daily patient statistics
+* Revenue overview
+* Recent activity
+
+### **Employee Management**
+* Employee list
+* Add, edit, and delete employees
+* Role and access management
+
+### **Patient Management**
+* Add new patients
+* Edit and delete patient data
+* Patient details & visit history
+* Quick patient search
+* Create appointments directly from the patient page
+
+### **Appointment Management**
+* Daily appointment list
+* Complete appointments
+* Send appointments to the pharmacy
+
+### **Prescriptions**
+* Doctors fill prescriptions after examination
+* Pharmacies automatically receive prescriptions
+* Medication quantities and instructions
+* Automatically reduce stock medications
+
+### **Medicine Inventory**
+* Add, edit, delete medications
+* Real-time medication inventory
+
+### **Payment**
+* Payment process after medication is completed
+* Patient billing details
+* Status: unpaid → paid
+
+
+## Technology Stack
+
+* **Next.js** – Frontend & backend routes
+* **TailwindCSS** – UI styling
+* **Shadcn/UI** – Components UI
+* **Supabase (PostgreSQL)** – Database service
+* **Prisma / Supabase Client** – ORM/DB client
+* **Next Auth** - Authentication solution
+* **Zustand** - State management
 
 ## Getting Started
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Installation
+
+1. Clone repository:
+
+```
+git clone https://github.com/rezakurniawan88/joyville-medical
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Set up environment variables:
 
-## Learn More
+```
+cp .env.example .env
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Update your .env with your credentials.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Run database migrations:
+```
+npx prisma migrate dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+6. Start the development server:
 
-## Deploy on Vercel
+```
+pnpm dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+7. Open your browser at http://localhost:3000
