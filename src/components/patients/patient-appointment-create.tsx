@@ -13,6 +13,11 @@ import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 import axiosInstance from "@/lib/axios"
 
+type DoctorType = {
+    id: number;
+    name: string;
+}
+
 export function CreateAppointmentForm({ patientId, setModalOpen, refetch }: { patientId: number, setModalOpen: (open: boolean) => void, refetch: () => void }) {
     const formSchema = z.object({
         doctorId: z.string().min(1, "Doctor is required"),
@@ -78,7 +83,7 @@ export function CreateAppointmentForm({ patientId, setModalOpen, refetch }: { pa
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent className="dark:bg-slate-800 dark:placeholder:text-slate-300 dark:text-slate-300">
-                                    {doctors?.map((doctor: any) => (
+                                    {doctors?.map((doctor: DoctorType) => (
                                         <SelectItem key={doctor.id} value={doctor.id.toString()} className="text-xs sm:text-sm dark:hover:bg-slate-700">
                                             {doctor.name}
                                         </SelectItem>

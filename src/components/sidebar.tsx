@@ -1,11 +1,18 @@
 import { menuItems } from "@/config/menu-items";
 import { Role } from "@/generated/prisma";
 import { useSidebar } from "@/stores/stores";
-import { LucideChevronLeft, LucideHospital } from "lucide-react";
+import { LucideChevronLeft, LucideHospital, type LucideProps } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./theme-toggle";
+import { ComponentType } from "react";
+
+type MenuItemType = {
+    path: string;
+    label: string;
+    icon: ComponentType<LucideProps>
+}
 
 export default function Sidebar() {
     const { isSidebarOpen, toggleSidebar } = useSidebar((state) => state);
@@ -37,7 +44,7 @@ export default function Sidebar() {
             <div className="space-y-3 px-4 pt-5">
                 <h1 className={`text-xs text-gray-500 font-semibold pl-2 transition-opacity duration-300 dark:text-gray-100 ${isSidebarOpen ? "block" : "hidden"}`}>Main menu</h1>
                 <div className="space-y-2">
-                    {userMenuItems.map((item: any) => (
+                    {userMenuItems.map((item: MenuItemType) => (
                         <Link
                             key={item.path}
                             href={item.path}

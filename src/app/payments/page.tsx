@@ -15,6 +15,30 @@ import PaginationTabel from "@/components/pagination-tabel";
 import { useSession } from "next-auth/react";
 import { forbidden } from "next/navigation";
 
+type PrescriptionType = {
+    id: number;
+    medicine: {
+        id: number;
+        name: string;
+        price: number;
+    };
+    quantity: number;
+    status: "PENDING" | "COMPLETED" | "CANCELLED" | string;
+}
+
+type PaymentAppointmentType = {
+    id: number;
+    patient: {
+        name: string;
+    };
+    doctor: {
+        name: string;
+    };
+    appointmentDate: string;
+    prescription: PrescriptionType[];
+    diagnosis: string;
+}
+
 export default function PaymentPage() {
     const { isSidebarOpen } = useSidebar((state) => state);
     const { data: session } = useSession();
@@ -35,12 +59,12 @@ export default function PaymentPage() {
         }
     });
 
-    const filteredData = useMemo(() => {
-        if (!dataPendingPayments) return [];
-        if (!debouncedSearch) return dataPendingPayments;
+    const filteredData = useMemo<PaymentAppointmentType[]>(() => {
+        const list = dataPendingPayments ?? [];
+        if (!debouncedSearch) return list;
 
-        return dataPendingPayments.filter((payment: any) =>
-            payment?.patient?.name.toLowerCase().includes(debouncedSearch.toLowerCase())
+        return list.filter((payment: PaymentAppointmentType) =>
+            payment.patient.name.toLowerCase().includes(debouncedSearch.toLowerCase())
         );
     }, [dataPendingPayments, debouncedSearch]);
 
@@ -117,7 +141,7 @@ export default function PaymentPage() {
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        currentData?.map((appointment: any, index: number) => (
+                                        currentData?.map((appointment: PaymentAppointmentType, index: number) => (
                                             <TableRow key={appointment.id} className="dark:hover:bg-slate-800">
                                                 <TableCell className="font-semibold px-4 dark:text-slate-300 whitespace-nowrap">{index + 1}</TableCell>
                                                 <TableCell className="font-semibold dark:text-slate-300 whitespace-nowrap">{appointment.patient.name}</TableCell>
@@ -127,16 +151,16 @@ export default function PaymentPage() {
                                                 </TableCell>
                                                 <TableCell className="dark:text-slate-300 whitespace-nowrap">
                                                     <Badge className={
-                                                        appointment.prescription.every((p: any) => p.status === "COMPLETED")
+                                                        appointment.prescription.every((p: PrescriptionType) => p.status === "COMPLETED")
                                                             ? "bg-green-400 dark:bg-green-500 dark:text-slate-100"
                                                             : "bg-blue-400 dark:bg-blue-500 dark:text-slate-100"
                                                     }>
-                                                        {appointment.prescription.every((p: any) => p.status === "COMPLETED")
+                                                        {appointment.prescription.every((p: PrescriptionType) => p.status === "COMPLETED")
                                                             ? "Payment Successful"
                                                             : "Waiting Payment"}
                                                     </Badge>
                                                 </TableCell>
-                                                <TableCell className="dark:text-slate-200 whitespace-nowrap">Rp.{appointment.prescription.reduce((total: number, p: any) => total + (p.medicine.price * p.quantity), 0).toLocaleString()}
+                                                <TableCell className="dark:text-slate-200 whitespace-nowrap">Rp.{appointment.prescription.reduce((total: number, p: PrescriptionType) => total + (p.medicine.price * p.quantity), 0).toLocaleString()}
                                                 </TableCell>
                                                 <TableCell>
                                                     <PaymentDetail appointment={appointment} />

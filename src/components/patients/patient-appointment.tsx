@@ -8,8 +8,21 @@ import { PatientType } from "@/types/patient-types";
 import { CreateAppointmentForm } from "./patient-appointment-create";
 import { useState } from "react";
 
+type AppointmentType = {
+    id: number;
+    appointmentDate: string;
+    doctor: {
+        id?: number;
+        name: string;
+    };
+    reason?: string;
+    status: "SCHEDULED" | "COMPLETED" | "CANCELLED" | string;
+};
+
 export default function PatientAppointment({ patient, refetch }: { patient: PatientType, refetch: () => void }) {
     const [modalOpen, setModalOpen] = useState(false);
+
+    const appointments = (patient.appointments ?? []) as unknown as AppointmentType[];
 
     return (
         <div className="space-y-4">
@@ -40,14 +53,14 @@ export default function PatientAppointment({ patient, refetch }: { patient: Pati
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {patient.appointments?.length === 0 ? (
+                            {appointments.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={4} className="text-center">
                                         No appointments found.
                                     </TableCell>
                                 </TableRow>
                             ) : (
-                                patient.appointments?.map((appointment: any) => (
+                                appointments.map((appointment: AppointmentType) => (
                                     <TableRow key={appointment.id} className="dark:hover:bg-slate-700">
                                         <TableCell className="whitespace-nowrap text-xs md:text-sm">
                                             {new Date(appointment.appointmentDate).toLocaleString()}

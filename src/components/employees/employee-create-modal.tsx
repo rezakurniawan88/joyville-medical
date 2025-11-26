@@ -138,7 +138,7 @@ export default function EmployeeCreateModal({ refetch }: { refetch: () => void }
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent className="dark:bg-slate-800 dark:placeholder:text-slate-400 dark:text-slate-400">
-                                            {roleList?.map((role: any, index: number) => (
+                                            {roleList?.map((role: string, index: number) => (
                                                 <SelectItem key={index} value={role} className="text-xs sm:text-sm dark:hover:bg-slate-700 ">
                                                     {role}
                                                 </SelectItem>

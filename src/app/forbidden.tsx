@@ -26,7 +26,7 @@ export default function Forbidden() {
                 </div>
 
                 <h1 className="text-4xl font-bold text-gray-900 mb-2">403 - Access Denied</h1>
-                <p className="text-gray-600 mb-8 max-w-md mx-auto">You don't have permission to access this page. Please contact your administrator if you believe this is a mistake.</p>
+                <p className="text-gray-600 mb-8 max-w-md mx-auto">You don&apos;t have permission to access this page. Please contact your administrator if you believe this is a mistake.</p>
 
                 <div className="flex gap-4 justify-center">
                     <Button onClick={handleGoBack} variant="outline" className="cursor-pointer">Go Back</Button>

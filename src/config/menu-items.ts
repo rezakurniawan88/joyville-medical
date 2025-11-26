@@ -5,14 +5,15 @@ import {
   LucideSquareUserRound,
   LucideCalendar,
   LucideBriefcaseMedical,
-  LucideBanknoteArrowUp
+  LucideBanknoteArrowUp,
+  type LucideProps
 } from "lucide-react"
 import { ComponentType } from "react"
 
 type MenuItem = {
   path: string
   label: string
-  icon: ComponentType<any>
+  icon: ComponentType<LucideProps>
 }
 
 export const menuItems: Partial<Record<Role, MenuItem[]>> = {

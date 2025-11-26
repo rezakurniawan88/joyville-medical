@@ -65,7 +65,7 @@ export default function AppointmentsPage() {
         if (!dataDoctorsAppointments) return [];
         if (!debouncedSearch) return dataDoctorsAppointments;
 
-        return dataDoctorsAppointments.filter((appointment: any) =>
+        return dataDoctorsAppointments.filter((appointment: AppointmentDetailProps) =>
             appointment?.patient?.name.toLowerCase().includes(debouncedSearch.toLowerCase())
         );
     }, [dataDoctorsAppointments, debouncedSearch]);

@@ -20,7 +20,7 @@ export default function MedicineDeleteModal({ medicineId, refetch }: { medicineI
             setModalIsOpen(false);
             refetch();
         },
-        onError: (error: any) => {
+        onError: (error) => {
             toast.error("Something went wrong");
             console.log(error);
         }

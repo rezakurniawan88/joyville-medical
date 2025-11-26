@@ -35,6 +35,14 @@ type PrescriptionItem = {
     note?: string;
 };
 
+type PrescriptionChangeValue = string | number | undefined;
+
+type MedicineType = {
+    id: number;
+    name: string;
+    price: number;
+}
+
 export default function AppointmentDetail({ appointment, refetch }: { appointment: AppointmentDetailProps, refetch: () => void }) {
     const [activeAction, setActiveAction] = useState<'COMPLETED' | 'CANCELLED' | null>(null);
     const [diagnosis, setDiagnosis] = useState<string>('');
@@ -63,7 +71,7 @@ export default function AppointmentDetail({ appointment, refetch }: { appointmen
             refetch();
             setActiveAction(null);
         },
-        onError: (error: any) => {
+        onError: (error) => {
             toast.error("Error updating appointment status");
             console.log("error update appointment", error);
             setActiveAction(null);
@@ -74,9 +82,20 @@ export default function AppointmentDetail({ appointment, refetch }: { appointmen
         setPrescriptions([...prescriptions, { medicineId: 0, quantity: 1, note: '' }]);
     };
 
-    const handlePrescriptionChange = (index: number, field: keyof PrescriptionItem, value: any) => {
+    const handlePrescriptionChange = (index: number, field: keyof PrescriptionItem, value: PrescriptionChangeValue) => {
         const newPrescriptions = [...prescriptions];
-        newPrescriptions[index] = { ...newPrescriptions[index], [field]: value };
+        // newPrescriptions[index] = { ...newPrescriptions[index], [field]: value };
+        if (field === 'medicineId' || field === 'quantity') {
+            newPrescriptions[index] = {
+                ...newPrescriptions[index],
+                [field]: typeof value === 'string' ? parseInt(value) : value
+            };
+        } else if (field === 'note') {
+            newPrescriptions[index] = {
+                ...newPrescriptions[index],
+                [field]: typeof value === 'string' ? value : ''
+            };
+        }
         setPrescriptions(newPrescriptions);
     };
 
@@ -204,7 +223,7 @@ export default function AppointmentDetail({ appointment, refetch }: { appointmen
                                                         <SelectValue placeholder="Select medicine" />
                                                     </SelectTrigger>
                                                     <SelectContent className="dark:bg-slate-800 dark:placeholder:text-slate-400 dark:text-slate-300">
-                                                        {dataMedicines?.map((medicine: any) => (
+                                                        {dataMedicines?.map((medicine: MedicineType) => (
                                                             <SelectItem
                                                                 key={medicine.id}
                                                                 className="dark:hover:bg-slate-700"

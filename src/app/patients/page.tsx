@@ -42,7 +42,7 @@ export default function PatientsPage() {
         if (!dataPatients) return [];
         if (!debouncedSearch) return dataPatients;
 
-        return dataPatients.filter((patient: any) =>
+        return dataPatients.filter((patient: PatientType) =>
             patient.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || patient.idCard.includes(debouncedSearch)
         );
     }, [dataPatients, debouncedSearch])

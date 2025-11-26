@@ -3,6 +3,14 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { Role } from "@/generated/prisma";
+
+type UpdateDataType = {
+    name: string;
+    email: string;
+    role: Role;
+    password?: string;
+}
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ employeeId: string }> }) {
     try {
@@ -17,10 +25,10 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ employ
         const { employeeId } = await params;
         const { name, email, role, password } = await req.json();
 
-        const updateData: any = {
+        const updateData: UpdateDataType = {
             name,
             email,
-            role,
+            role: role as Role,
         };
 
         if (password) {

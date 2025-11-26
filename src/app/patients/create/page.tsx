@@ -59,7 +59,7 @@ export default function CreatePatientPage() {
             form.reset();
             router.push("/patients");
         },
-        onError: (error: any) => {
+        onError: (error) => {
             toast.error("Something went wrong");
             console.log(error);
         }

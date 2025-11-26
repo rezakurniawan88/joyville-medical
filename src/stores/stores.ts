@@ -12,10 +12,10 @@ type ProfileState = {
 
 export const useSidebar = create<SidebarState>((set) => ({
   isSidebarOpen: true,
-  toggleSidebar: () => set((state: any) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 }))
 
 export const useProfile = create<ProfileState>((set) => ({
   isProfileOpen: false,
-  toggleProfile: () => set((state: any) => ({ isProfileOpen: !state.isProfileOpen })),
+  toggleProfile: () => set((state) => ({ isProfileOpen: !state.isProfileOpen })),
 }))

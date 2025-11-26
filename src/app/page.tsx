@@ -11,6 +11,14 @@ import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios";
 import { Badge } from "@/components/ui/badge";
 
+type AppointmentType = {
+  id: number;
+  patient: string;
+  doctor: string;
+  status: "SCHEDULED" | "COMPLETED" | "CANCELLED";
+  revenue: number;
+}
+
 export default function Home() {
   const { isSidebarOpen } = useSidebar((state) => state);
 
@@ -151,7 +159,7 @@ export default function Home() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {statistics?.recentAppointments?.map((apt: any) => (
+                  {statistics?.recentAppointments?.map((apt: AppointmentType) => (
                     <TableRow key={apt.id} className="text-xs md:text-sm dark:text-slate-300 dark:hover:bg-slate-800">
                       <TableCell className="whitespace-nowrap">{apt.patient}</TableCell>
                       <TableCell className="whitespace-nowrap">{apt.doctor}</TableCell>

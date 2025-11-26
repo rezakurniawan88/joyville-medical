@@ -11,7 +11,31 @@ import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
 
-export default function PaymentDetail({ appointment }: { appointment: any }) {
+type PrescriptionType = {
+    id: number;
+    medicine: {
+        id: number;
+        name: string;
+        price: number;
+    };
+    quantity: number;
+    status: "PENDING" | "COMPLETED" | "CANCELLED" | string;
+}
+
+type AppointmentType = {
+    id: number;
+    patient: {
+        name: string;
+    };
+    doctor: {
+        name: string;
+    };
+    appointmentDate: string;
+    prescription: PrescriptionType[];
+    diagnosis: string;
+}
+
+export default function PaymentDetail({ appointment }: { appointment: AppointmentType }) {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
 
@@ -31,7 +55,7 @@ export default function PaymentDetail({ appointment }: { appointment: any }) {
     });
 
     const total = appointment.prescription.reduce(
-        (sum: number, p: any) => sum + (p.medicine.price * p.quantity),
+        (sum: number, p: PrescriptionType) => sum + (p.medicine.price * p.quantity),
         0
     );
 
@@ -63,7 +87,7 @@ export default function PaymentDetail({ appointment }: { appointment: any }) {
                                 {new Date(appointment.appointmentDate).toLocaleString()}
                             </p>
                         </div>
-                        {appointment.prescription.every((p: any) => p.status === "COMPLETED") ? (
+                        {appointment.prescription.every((p: PrescriptionType) => p.status === "COMPLETED") ? (
                             <div>
                                 <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1">Status</p>
                                 <Badge className="bg-green-100 text-green-500 dark:bg-green-500 dark:text-slate-100">Completed</Badge>
@@ -93,7 +117,7 @@ export default function PaymentDetail({ appointment }: { appointment: any }) {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {appointment.prescription.map((prescription: any) => (
+                                    {appointment.prescription.map((prescription: PrescriptionType) => (
                                         <TableRow key={prescription.id} className="dark:hover:bg-slate-700">
                                             <TableCell className="px-4 text-xs sm:text-sm whitespace-nowrap dark:text-slate-200">{prescription.medicine.name}</TableCell>
                                             <TableCell className="text-xs sm:text-sm whitespace-nowrap dark:text-slate-200">{prescription.quantity} pcs</TableCell>
@@ -118,7 +142,7 @@ export default function PaymentDetail({ appointment }: { appointment: any }) {
                         </div>
                     </div>
 
-                    {appointment.prescription.every((p: any) => p.status === "PENDING") ? (
+                    {appointment.prescription.every((p: PrescriptionType) => p.status === "PENDING") ? (
                         <div className="flex justify-end">
                             <Button
                                 className="px-6 bg-green-600 hover:bg-green-700 cursor-pointer"

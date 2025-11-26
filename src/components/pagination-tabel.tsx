@@ -6,7 +6,7 @@ type PaginationTabelType = {
     totalPages: number;
     startIndex: number;
     endIndex: number;
-    setPage: (p: any) => void;
+    setPage: (p: number) => void;
 }
 
 export default function PaginationTabel({ page, totalItems, totalPages, startIndex, endIndex, setPage }: PaginationTabelType) {
@@ -22,7 +22,7 @@ export default function PaginationTabel({ page, totalItems, totalPages, startInd
                 <PaginationContent>
                     <PaginationItem>
                         <PaginationPrevious
-                            onClick={() => setPage((p: number) => Math.max(1, p - 1))}
+                            onClick={() => setPage(Math.max(1, page - 1))}
                             className={`${page <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
                             aria-disabled={page <= 1}
                             tabIndex={page <= 1 ? -1 : undefined}
@@ -42,7 +42,7 @@ export default function PaginationTabel({ page, totalItems, totalPages, startInd
 
                     <PaginationItem>
                         <PaginationNext
-                            onClick={() => setPage((p: number) => Math.min(totalPages, p + 1))}
+                            onClick={() => setPage(Math.min(totalPages, page + 1))}
                             className={`${page === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
                             aria-disabled={page === totalPages}
                             tabIndex={page === totalPages ? 1 : undefined}

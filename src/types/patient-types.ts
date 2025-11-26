@@ -1,3 +1,17 @@
+type appointmentDetailProps = {
+    id: number;
+    patient: {
+        id: number;
+        name: string;
+    };
+    doctor: {
+        id: number;
+        name: string;
+    };
+    status: "SCHEDULED" | "COMPLETED" | "CANCELLED";
+    revenue: number;
+}
+
 export type PatientType = {
     id: number
     idCard: string
@@ -8,5 +22,5 @@ export type PatientType = {
     phone: string
     email: string
     bloodType: string
-    appointments?: any[]
+    appointments?: appointmentDetailProps[]
 }

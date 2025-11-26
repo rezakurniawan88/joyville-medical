@@ -3,6 +3,12 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server"
 
+type PrescriptionType = {
+    medicineId: number;
+    quantity: number;
+    note?: string;
+}
+
 export async function PATCH(req: Request, { params }: { params: Promise<{ appointmentId: string }>}) {
     try {
         const session = await getServerSession(authOptions);
@@ -30,7 +36,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ appoin
     
                 if(prescriptions && prescriptions.length > 0) {
                     await tx.prescription.createMany({
-                        data: prescriptions.map((prescription: any) => ({
+                        data: prescriptions.map((prescription: PrescriptionType) => ({
                             appointmentId: Number(appointmentId),
                             medicineId: prescription.medicineId,
                             quantity: prescription.quantity,
